@@ -39,7 +39,7 @@ void* thread2_func(void* arg)
 int main()
 {
     // 新建文件
-    FILE* fp = fopen("test.txt", "wt");
+    FILE *fp = fopen("pthread_spin_init.txt", "wt");
 
     // 初始化自旋锁
     pthread_spin_init(&g_spinlock, PTHREAD_PROCESS_PRIVATE);

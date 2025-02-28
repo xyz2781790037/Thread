@@ -1,7 +1,7 @@
 #include <iostream>
 #include <pthread.h>
 #include <vector>
-#include <time.h>
+#include <chrono>
 using namespace std;
 #define MAX_NUM 100000000
 typedef struct Arg
@@ -60,7 +60,7 @@ void *mergesort(void *arg)
     args *la = new args{&v, left, mid, ag->depth};
     args *lb = new args{&v, mid + 1, right, ag->depth};
 
-    if (ag->depth < 5)
+    if (ag->depth < 10)
     {
         pthread_t pth1, pth2;
         pthread_create(&pth1, nullptr, mergesort, la);
@@ -82,7 +82,7 @@ int main()
 {
     vector<int> v;
     Data(v);
-    clock_t start = clock();
+    auto start = chrono::high_resolution_clock::now();
     args *av = new args{&v, 0, MAX_NUM - 1, 0};
     pthread_t main_pth;
     pthread_create(&main_pth, nullptr, mergesort, av);
@@ -91,6 +91,7 @@ int main()
     // {
     //     cout << v[i] << endl;
     // }
-    clock_t end = clock();
-    cout << (double)(end - start) / CLOCKS_PER_SEC << endl;
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> time_s = end - start;
+    cout << time_s.count() << endl;
 }

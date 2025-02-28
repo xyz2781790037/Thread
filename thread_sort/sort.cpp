@@ -4,6 +4,7 @@
 #include <climits>
 using namespace std;
 #define MAX_NUM 100000000
+
 void merge(vector<int> &v, int left, int mid, int right)
 {
     vector<int> tmp(right - left + 1); // 临时数组存放合并结果
