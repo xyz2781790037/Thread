@@ -3,7 +3,7 @@
 #include <iterator>
 #include <climits>
 using namespace std;
-#define MAX_NUM 100000
+#define MAX_NUM 100000000
 void merge(vector<int> &v, int left, int mid, int right)
 {
     vector<int> tmp(right - left + 1); // 临时数组存放合并结果
@@ -45,13 +45,23 @@ void mergeSort(vector<int> &nums, int left, int right)
     // 合并阶段
     merge(nums, left, mid, right);
 }
+void Data(vector<int> &v)
+{
+    srand((size_t)time(NULL));
+    for (int i = 0; i < MAX_NUM; i++)
+        v.push_back(rand());
+}
 int main()
 {
-    vector<int> v = {1, 10, 4, 5, 3, 2, 7, 8, 6, 9};
+    vector<int> v;
+    clock_t st = clock();
+    Data(v);
     mergeSort(v, 0, v.size() - 1);
-    for (int i = 0; i < 10; i++)
-    {
-        cout << v[i] << endl;
-    }
+    // for (int i = 0; i < MAX_NUM; i++)
+    // {
+    //     cout << v[i] << endl;
+    // }
+    clock_t end = clock();
+    cout << (double)(end - st) / CLOCKS_PER_SEC << endl;
     return 0;
 }
