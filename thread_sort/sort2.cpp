@@ -60,7 +60,7 @@ void *mergesort(void *arg)
     args *la = new args{&v, left, mid, ag->depth};
     args *lb = new args{&v, mid + 1, right, ag->depth};
 
-    if (ag->depth < 10)
+    if (ag->depth < 8)
     {
         pthread_t pth1, pth2;
         pthread_create(&pth1, nullptr, mergesort, la);
