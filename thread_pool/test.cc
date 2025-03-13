@@ -10,26 +10,26 @@ void *task1(void *arg)
     pthread_t *a = (pthread_t *)arg;
     if (*a == pth[0])
     {
-        cout << "task1 start" << endl;
+        printf("task1 start\n");
     }
     else
     {
-        cout << "not task1 start" << " ";
+        printf("not task1 start ");
         if(*a == pth[1])
         {
-            cout << "p1" << endl;
+            printf("p2\n");
         }
         else if(*a == pth[2])
         {
-            cout << "p2" << endl;
+            printf("p3\n");
         }
         else if(*a == pth[3])
         {
-            cout << "p3" << endl;
+            printf("p4\n");
         }
         else
         {
-            cout << "p0" << endl;
+            printf("p1\n");
         }
     }
     return nullptr;
@@ -39,26 +39,26 @@ void *task2(void *arg)
     pthread_t *a = (pthread_t *)arg;
     if (*a == pth[1])
     {
-        cout << "task2 start" << endl;
+        printf("task2 start\n");
     }
     else
     {
-        cout << "not task2 start" << " ";
+        printf("not task2 start ");
         if (*a == pth[1])
         {
-            cout << "p1" << endl;
+            printf("p2\n");
         }
         else if (*a == pth[2])
         {
-            cout << "p2" << endl;
+            printf("p3\n");
         }
         else if (*a == pth[3])
         {
-            cout << "p3" << endl;
+            printf("p4\n");
         }
         else
         {
-            cout << "p0" << endl;
+            printf("p1\n");
         }
     }
     return nullptr;
@@ -68,26 +68,26 @@ void *task3(void *arg)
     pthread_t *a = (pthread_t *)arg;
     if (*a == pth[2])
     {
-        cout << "task3 start" << endl;
+        printf("task3 start\n");
     }
     else
     {
-        cout << "not task3 start" << " ";
+        printf("not task3 start ");
         if (*a == pth[1])
         {
-            cout << "p1" << endl;
+            printf("p2\n");
         }
         else if (*a == pth[2])
         {
-            cout << "p2" << endl;
+            printf("p3\n");
         }
         else if (*a == pth[3])
         {
-            cout << "p3" << endl;
+            printf("p4\n");
         }
         else
         {
-            cout << "p0" << endl;
+            printf("p1\n");
         }
     }
     return nullptr;
@@ -97,26 +97,26 @@ void *task4(void *arg)
     pthread_t *a = (pthread_t *)arg;
     if (*a == pth[3])
     {
-        cout << "task4 start" << endl;
+        printf("task4 start\n");
     }
     else
     {
-        cout << "not task4 start" << " ";
+        printf("not task4 start ");
         if (*a == pth[1])
         {
-            cout << "p1" << endl;
+            printf("p2\n");
         }
         else if (*a == pth[2])
         {
-            cout << "p2" << endl;
+            printf("p3\n");
         }
         else if (*a == pth[3])
         {
-            cout << "p3" << endl;
+            printf("p4\n");
         }
         else
         {
-            cout << "p0" << endl;
+            printf("p1\n");
         }
     }
     return nullptr;
@@ -126,26 +126,26 @@ void *task5(void *arg)
     pthread_t *a = (pthread_t *)arg;
     if (*a == pth[0])
     {
-        cout << "task5 start" << endl;
+        printf("task5 start\n");
     }
     else
     {
-        cout << "not task5 start" << " ";
+        printf("not task5 start ");
         if (*a == pth[1])
         {
-            cout << "p1" << endl;
+            printf("p2\n");
         }
         else if (*a == pth[2])
         {
-            cout << "p2" << endl;
+            printf("p3\n");
         }
         else if (*a == pth[3])
         {
-            cout << "p3" << endl;
+            printf("p4\n");
         }
         else
         {
-            cout << "p0" << endl;
+            printf("p1\n");
         }
     }
     return nullptr;
@@ -155,26 +155,26 @@ void *task6(void *arg)
     pthread_t *a = (pthread_t *)arg;
     if (*a == pth[1])
     {
-        cout << "task6 start" << endl;
+        printf("task6 start\n");
     }
     else
     {
-        cout << "not task6 start" << " ";
+        printf("not task6 start ");
         if (*a == pth[1])
         {
-            cout << "p1" << endl;
+            printf("p2\n");
         }
         else if (*a == pth[2])
         {
-            cout << "p2" << endl;
+            printf("p3\n");
         }
         else if (*a == pth[3])
         {
-            cout << "p3" << endl;
+            printf("p4\n");
         }
         else
         {
-            cout << "p0" << endl;
+            printf("p1\n");
         }
     }
     return nullptr;
