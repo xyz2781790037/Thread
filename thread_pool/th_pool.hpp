@@ -1,50 +1,51 @@
 #include <iostream>
 #include <unistd.h>
-#include <iostream>
 #include <queue>
 #include <functional>
 #include <pthread.h>
 #include <vector>
+
 class pool
 {
 private:
     pthread_mutex_t mutex;
     pthread_cond_t cond;
-    void *(*callback)(void *);
     bool runflag = true;
-
-public:
-    std::queue<std::function<void *(void *)>> works;
+    std::queue<std::function<void *()>> works; // 修改为无参函数队列
     std::vector<pthread_t> pth;
     int thread_count;
 
 public:
-    pool(int n = 4)
+    pool(int n = 4) : thread_count(n)
     {
         pthread_cond_init(&cond, nullptr);
         pthread_mutex_init(&mutex, nullptr);
-        this->thread_count = n;
         pth.resize(n);
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; ++i)
         {
             pthread_create(&pth[i], nullptr, &pool::staticTask, this);
         }
     }
+
     ~pool()
     {
-        for (int i = 0; i < thread_count; i++)
+        end_thread();
+        for (pthread_t &tid : pth)
         {
-            pthread_join(pth[i], nullptr);
+            pthread_join(tid, nullptr);
         }
         pthread_mutex_destroy(&mutex);
         pthread_cond_destroy(&cond);
     }
+
     static void *staticTask(void *arg)
     {
         pool *self = static_cast<pool *>(arg);
-        return self->task(arg); // 调用实际的任务处理函数
+        return self->task();
     }
-    void* task(void* arg){
+
+    void *task()
+    {
         pthread_mutex_lock(&mutex);
         while (runflag || !works.empty())
         {
@@ -54,23 +55,26 @@ public:
             }
             if (!works.empty())
             {
-                auto callback = works.front();
+                auto func = works.front();
                 works.pop();
                 pthread_mutex_unlock(&mutex);
-                callback(arg);
+                func();
                 pthread_mutex_lock(&mutex);
             }
         }
         pthread_mutex_unlock(&mutex);
         return nullptr;
     }
-    void enqueue(std::function<void *(void *)> callback)
+
+    void enqueue(std::function<void *(void *)> callback, void *arg)
     {
         pthread_mutex_lock(&mutex);
-        works.push(callback);
+        works.emplace([callback, arg]()
+                      { return callback(arg); }); // 绑定参数
         pthread_cond_signal(&cond);
         pthread_mutex_unlock(&mutex);
     }
+
     void end_thread()
     {
         pthread_mutex_lock(&mutex);
@@ -78,6 +82,7 @@ public:
         pthread_cond_broadcast(&cond);
         pthread_mutex_unlock(&mutex);
     }
+
     void finish()
     {
         pthread_mutex_lock(&mutex);

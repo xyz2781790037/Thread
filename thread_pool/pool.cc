@@ -41,23 +41,24 @@ void *task7(void *arg)
     printf("task7 start\n");
     return nullptr;
 }
-void *task8(void *arg)
+void *task8(void* arg)
 {
-    // pthread_t *a = (pthread_t *)arg;
+    int *acc = (int *)arg;
     printf("task8 start\n");
+    std::cout << *acc << std::endl;
     return nullptr;
 }
 int main()
 {
-    po.enqueue(task1);
-    po.enqueue(task2);
-    po.enqueue(task3);
-    po.enqueue(task4);
-    po.finish();
-    po.enqueue(task5);
-    po.enqueue(task6);
-    po.enqueue(task7);
-    po.enqueue(task8);
+    int a = 6;
+    po.enqueue(task1, nullptr);
+    po.enqueue(task2,nullptr);
+    po.enqueue(task3,nullptr);
+    po.enqueue(task4,nullptr);
+    po.enqueue(task5,nullptr);
+    po.enqueue(task6,nullptr);
+    po.enqueue(task7,nullptr);
+    po.enqueue(task8,&a);
     po.finish();
     po.end_thread();
     return 0;
