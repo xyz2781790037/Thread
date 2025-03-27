@@ -27,6 +27,6 @@ int main()
     po.enqueue(task3, 3.55);
     po.enqueue(task3, 3);
     po.enqueue(task1, 2);
-    po.enqueue(task2, 5,7);
+    po.enqueue(task2, 1,7);
     return 0;
 }
