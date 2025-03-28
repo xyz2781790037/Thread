@@ -47,7 +47,7 @@ public:
     void *task()
     {
         pthread_mutex_lock(&mutex);
-        while (runflag || !works.empty())
+        while (runflag)
         {
             while (works.empty() && runflag)
             {
