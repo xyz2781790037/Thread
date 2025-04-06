@@ -1,7 +1,8 @@
 #include "threadpool.hpp"
-void task1(int num)
+int task1(int num)
 {
     std::cout << num << std::endl;
+    return num;
 }
 void task2(int n,int m)
 {
@@ -24,9 +25,10 @@ void task3(float num)
 int main()
 {
     pool po(4);
-    po.enqueue(task3, 3.55);
-    po.enqueue(task3, 3);
-    po.enqueue(task1, 2);
-    po.enqueue(task2, 1,7);
+    auto a = po.enqueue(task1, 1);
+    // std::cout << a.get() << std::endl;
+    po.enqueue(task2, 3, 4);
+    po.enqueue(task3, 4);
+    po.enqueue(task3, 3.12);
     return 0;
 }

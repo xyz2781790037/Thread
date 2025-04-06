@@ -6,7 +6,8 @@
 #include <mutex>
 #include <functional>
 #include <condition_variable>
-#include <tuple>
+#include <future>
+
 class pool
 {
 private:
@@ -18,51 +19,65 @@ private:
     bool runflag = true;
 
 public:
-    pool(int n = 4) : thread_count(n){
-        for (int i = 0; i < thread_count; i++){
-            thd.emplace_back([this]() {
+    pool(int n = 4) : thread_count(n)
+    {
+        for (int i = 0; i < thread_count; ++i)
+        {
+            thd.emplace_back([this]()
+                             {
                 while (true) {
-                    std::function<void()> callback;{
+                    std::function<void()> task;
+                    {
                         std::unique_lock<std::mutex> lock(mtx);
-                        cv.wait(lock, [this]
-                                { return !works.empty() || !runflag; });
-                        if (!runflag && works.empty())
-                        {
-                            return;
-                        }
-                        if (!works.empty())
-                        {
-                            callback = std::move(works.front());
+                        cv.wait(lock, [this] { return !works.empty() || !runflag; });
+                        if (!runflag && works.empty()) return;
+                        if (!works.empty()) {
+                            task = std::move(works.front());
                             works.pop();
                         }
-                    }if (callback){
-                       callback();
                     }
+                    if (task) task();
                 } });
         }
     }
-    ~pool(){{
+
+    ~pool()
+    {
+        {
             std::unique_lock<std::mutex> lock(mtx);
             runflag = false;
         }
         cv.notify_all();
-        for (auto &t : thd){
+        for (auto &t : thd)
+        {
             if (t.joinable())
                 t.join();
         }
     }
+
 public:
     template <typename F, typename... Args>
-    void enqueue(F &&f, Args &&...args){
-        auto task = [f = std::forward<F>(f), args = std::make_tuple(std::forward<Args>(args)...)]() mutable
-        {
-            std::apply([&f](auto &&...args) { std::invoke(f, std::forward<decltype(args)>(args)...); 
-            }, args);
-        };
+    auto enqueue(F &&f, Args &&...args) -> std::future<typename std::invoke_result<F, Args...>::type>
+    {
+        using return_type = typename std::invoke_result<F, Args...>::type;
+
+        // 使用 packaged_task 封装任务并绑定返回值
+        auto task = std::make_shared<std::packaged_task<return_type()>>(
+            [func = std::forward<F>(f), args = std::make_tuple(std::forward<Args>(args)...)]() mutable
+            {
+                return std::apply(func, args);
+            });
+
+        // 获取 future 对象
+        std::future<return_type> res = task->get_future();
+
         {
             std::unique_lock<std::mutex> lock(mtx);
-            works.emplace(std::move(task));
+            works.emplace([task]()
+                          { (*task)(); }); // 将任务包装为 void() 类型
         }
+
         cv.notify_one();
+        return res;
     }
 };
